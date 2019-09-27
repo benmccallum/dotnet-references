@@ -46,8 +46,7 @@ namespace BenMcCallum.DotNet.FixReferences
                 var matches = _slnFileCsProjRegex.Matches(slnFileContents);
                 foreach (Match match in matches)
                 {
-                    var lastSlashIndex = match.Value.LastIndexOf('\\');
-                    var csProjFileName = match.Value.Substring(lastSlashIndex + 1).TrimEnd('\"');
+                    var csProjFileName = ExtractCsProjName(match.Value);
                     var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
                     var csProjRelativeFilePath = GetRelativePathTo(slnFilePath, csProjFilePath);
                     slnFileContents = slnFileContents.Replace(match.Value, $", \"{csProjRelativeFilePath}\"");
@@ -70,8 +69,7 @@ namespace BenMcCallum.DotNet.FixReferences
                 var matches = _csProjRegex.Matches(csProjFileContents);
                 foreach (Match match in matches)
                 {
-                    var lastSlashIndex = match.Value.LastIndexOf('\\');
-                    var csProjDepFileName = match.Value.Substring(lastSlashIndex + 1).TrimEnd('\"');
+                    var csProjDepFileName = ExtractCsProjName(match.Value);
                     var csProjDepFilePath = FindCsProjFilePath(csProjFilePaths, csProjDepFileName);
                     var csProjDepRelativeFilePath = GetRelativePathTo(csProjFilePath, csProjDepFilePath);
                     csProjFileContents = csProjFileContents.Replace(match.Value, $"Include=\"{csProjDepRelativeFilePath}\"");
@@ -87,6 +85,16 @@ namespace BenMcCallum.DotNet.FixReferences
                     Console.WriteLine($"No changes required in {csProjFilePath}");
                 }
             }
+        }
+
+        private static string ExtractCsProjName(string input)
+        {
+            var lastSlashIndex = input.LastIndexOf('\\');
+            if (lastSlashIndex > 0)
+            {
+                input = input.Substring(lastSlashIndex + 1);
+            }
+            return input.TrimEnd('\"');
         }
 
         private static string FindCsProjFilePath(string[] csProjFiles, string csProjFileName)

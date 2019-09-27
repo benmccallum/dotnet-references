@@ -1,6 +1,7 @@
 <Project>
 
   <PropertyGroup>
+    <Version>0.0.1</Version>
     <Description>A dotnet global tool that fixes references to projects in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
     <Product>dotnet-fix-references</Product>
@@ -20,11 +21,6 @@
 
     <!--<BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <BaseOutputPath>$(MSBuildThisFileDirectory).build\bin\$(MSBuildProjectName)</BaseOutputPath>-->
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <VersionPrefix>0.0.1</VersionPrefix>
-    <PackageDescription>$(Description)</PackageDescription>
   </PropertyGroup>
 
 </Project>
