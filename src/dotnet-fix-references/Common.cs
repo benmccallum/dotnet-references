@@ -19,7 +19,7 @@ namespace BenMcCallum.DotNet.FixReferences
             return input.TrimEnd('\"');
         }
 
-        public static string FindCsProjFilePath(string[] csProjFiles, string csProjFileName)
+        public static string FindCsProjFilePath(string[] csProjFiles, string csProjFileName, string sourcedFromPath = null)
         {
             try
             {
@@ -27,7 +27,11 @@ namespace BenMcCallum.DotNet.FixReferences
             }
             catch (Exception ex)
             {
-                WriteError($"Could not find csproj file path for: {csProjFileName}.", ex);
+                WriteError(
+                    $"Could not find csproj file path for: '{ csProjFileName}'" +
+                        (sourcedFromPath == null ? "" : $" in '{sourcedFromPath}'") +
+                        $".", 
+                    ex);
                 throw;
             }
         }

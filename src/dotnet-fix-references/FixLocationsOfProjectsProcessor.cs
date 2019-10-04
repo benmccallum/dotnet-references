@@ -9,11 +9,13 @@ namespace BenMcCallum.DotNet.FixReferences
 {
     public static class FixLocationsOfProjectsProcessor
     {
+        private static string Cwd { get; set; }
+
         public static void Process(string slnFilePath, string currentWorkingDirectory, bool removeExtras)
         {
             Console.WriteLine("Starting process with the following args:");
             Console.WriteLine($"Solution File Path: {slnFilePath}");
-            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}");
+            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}"); Cwd = currentWorkingDirectory;
             Console.WriteLine($"Remove Extras: {removeExtras}");
 
             var csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj", SearchOption.AllDirectories);
@@ -46,7 +48,7 @@ namespace BenMcCallum.DotNet.FixReferences
             var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value);
 
             // Find where it currently is
-            var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
+            var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName, Cwd);
 
             // Determine where it should be moved to
             var newCsProjFilePath = Path.Combine(rootPath, csProjReferenceRelativePath);
