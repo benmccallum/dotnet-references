@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,6 +11,11 @@ namespace BenMcCallum.DotNet.FixReferences
     {
         public static void Process(string slnFilePath, string currentWorkingDirectory, bool removeExtras)
         {
+            Console.WriteLine("Starting process with the following args:");
+            Console.WriteLine($"Solution File Path: {slnFilePath}");
+            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}");
+            Console.WriteLine($"Remove Extras: {removeExtras}");
+
             var csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj", SearchOption.AllDirectories);
 
             var csProjFilesProcessed = new HashSet<string>();

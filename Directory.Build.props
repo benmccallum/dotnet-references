@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Description>A dotnet global tool that fixes references to projects in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
     <Product>dotnet-fix-references</Product>
