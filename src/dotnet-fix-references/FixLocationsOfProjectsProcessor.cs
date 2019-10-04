@@ -9,13 +9,11 @@ namespace BenMcCallum.DotNet.FixReferences
 {
     public static class FixLocationsOfProjectsProcessor
     {
-        private static string Cwd { get; set; }
-
         public static void Process(string slnFilePath, string currentWorkingDirectory, bool removeExtras)
         {
             Console.WriteLine("Starting process with the following args:");
             Console.WriteLine($"Solution File Path: {slnFilePath}");
-            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}"); Cwd = currentWorkingDirectory;
+            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}");
             Console.WriteLine($"Remove Extras: {removeExtras}");
 
             var csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj", SearchOption.AllDirectories);
@@ -48,13 +46,14 @@ namespace BenMcCallum.DotNet.FixReferences
             var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value);
 
             // Find where it currently is
-            var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName, Cwd);
+            var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
 
             // Determine where it should be moved to
             var newCsProjFilePath = Path.Combine(rootPath, csProjReferenceRelativePath);
 
             // Move it there instead, creating dirs as necessary
             Directory.CreateDirectory(newCsProjFilePath.Replace(csProjFileName, "").TrimEnd('/'));
+            Console.WriteLine($"Moving '{csProjFileName}' from '{csProjFilePath}' to '{newCsProjFilePath}'");
             File.Move(csProjFilePath, newCsProjFilePath);
 
             // Mark that we've moved this one

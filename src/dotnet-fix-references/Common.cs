@@ -27,11 +27,7 @@ namespace BenMcCallum.DotNet.FixReferences
             }
             catch (Exception ex)
             {
-                WriteError(
-                    $"Could not find csproj file path for: '{ csProjFileName}'" +
-                        (sourcedFromPath == null ? "" : $" in '{sourcedFromPath}'") +
-                        $".", 
-                    ex);
+                WriteError($"Could not find csproj file path for: '{ csProjFileName}'.", ex);
                 throw;
             }
         }
