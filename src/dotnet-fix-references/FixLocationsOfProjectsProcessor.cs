@@ -54,7 +54,10 @@ namespace BenMcCallum.DotNet.FixReferences
             // Move it there instead, creating dirs as necessary
             Directory.CreateDirectory(newCsProjFilePath.Replace(csProjFileName, "").TrimEnd('/'));
             Console.WriteLine($"Moving '{csProjFileName}' from '{csProjFilePath}' to '{newCsProjFilePath}'");
-            File.Move(csProjFilePath, newCsProjFilePath);
+            // Far out docker... https://github.com/docker/for-win/issues/1051
+            // File.Move(csProjFilePath, newCsProjFilePath);
+            File.Copy(csProjFilePath, newCsProjFilePath);
+            File.Delete(csProjFilePath);            
 
             // Mark that we've moved this one
             csProjFilesProcessed.Add(csProjFileName);

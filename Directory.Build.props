@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
     <Description>A dotnet global tool that fixes references to projects in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
     <Product>dotnet-fix-references</Product>
@@ -15,12 +15,8 @@
     <IsPackable>false</IsPackable>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <LangVersion>8.0</LangVersion>
-
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateFullPaths Condition="'$(TERM_PROGRAM)' == 'vscode'">true</GenerateFullPaths>
-
-    <!--<BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildThisFileDirectory).build\bin\$(MSBuildProjectName)</BaseOutputPath>-->
   </PropertyGroup>
 
 </Project>
