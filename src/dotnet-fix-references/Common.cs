@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -19,11 +20,11 @@ namespace BenMcCallum.DotNet.FixReferences
             return input.TrimEnd('\"');
         }
 
-        public static string FindCsProjFilePath(string[] csProjFiles, string csProjFileName, string sourcedFromPath = null)
+        public static string FindCsProjFilePath(string[] csProjFilePaths, string csProjFileName, string sourcedFromPath = null)
         {
             try
             {
-                return csProjFiles.Single(f => f.EndsWith($"\\{csProjFileName}"));
+                return csProjFilePaths.Single(fp => Path.GetFileName(fp) == csProjFileName);
             }
             catch (Exception ex)
             {
