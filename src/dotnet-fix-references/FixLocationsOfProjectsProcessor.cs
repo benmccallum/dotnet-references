@@ -16,22 +16,8 @@ namespace BenMcCallum.DotNet.FixReferences
             Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}");
             Console.WriteLine($"Remove Extras: {removeExtras}");
 
-            var files = Directory.GetFiles(currentWorkingDirectory);
-            Console.WriteLine($"Found {files.Length} files in {currentWorkingDirectory}.");
-
             var csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj", SearchOption.AllDirectories);
-            Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory}.");
-
-            csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*", SearchOption.AllDirectories)
-                .Where(f => f.EndsWith(".csproj")).ToArray();
-            Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory} (recursive, with where).");
-
-            csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj");
-            Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory} (not recursive).");            
-
-            csProjFilePaths = Directory.GetFiles(currentWorkingDirectory)
-                .Where(f => f.EndsWith(".csproj")).ToArray();
-            Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory}.");
+            //Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory}.");
 
             var csProjFilesProcessed = new HashSet<string>();
 
@@ -58,7 +44,9 @@ namespace BenMcCallum.DotNet.FixReferences
                 return;
             }
 
-            var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value);
+            var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value)
+                // Replacing slashes so Linux doesn't freak out
+                .Replace("\\", "/");
 
             // Find where it currently is
             var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
