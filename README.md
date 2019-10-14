@@ -50,6 +50,10 @@ This tool updates/deletes files in-place. Backup anything you care about before 
 # Feature backlog
 1. Support Mode 2 (file-first) via .csproj entry
 1. Support Mode 3
-1. Support changed project file names. Use would provide a mapping to be used in the processing
+1. Refactor and code cleanup
+1.1 Use a console arg parsing library
+1.1 Parse csproj files as XML instead of using regex
+1.1 Better error handling and logging (perhaps with a verbosity argument)
+1. Support changed project file names. User would provide a mapping to be used in the processing
 1. Support Mode 4
 1. A rudimentary backup facility? Saving existing files where they were as .ext.bak or something like that
