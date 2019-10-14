@@ -24,7 +24,7 @@ By passing a .sln or .csproj file, the tool will assume the entry point Fix loca
 > dotnet fix-references Company.Project.sln . true
 
 Use cases:
-1. Overcoming Dockerfile globbing limitations... See [coming soon(#)].
+1. Overcoming Dockerfile COPY globbing limitations... See [docs/Dockerfile-use-case.md](here).
 
 ## Mode 3: PackageReference --> ProjectReference
 Coming soon...
