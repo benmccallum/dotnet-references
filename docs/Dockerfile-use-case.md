@@ -45,8 +45,9 @@ RUN for file in $(ls *.csproj); do mv $file .; done
 
 ### Run the tool
 Run this dotnet global tool at your sln file (or csproj file), 
+give it the "root" where all the .csproj files were copied, and
 optionally passing `true` to delete .csproj files that aren't actuallly in the dependency graph from the entry point.
-> dotnet fix-references MyCompany.MySolution.sln . true
+> dotnet fix-references ./The/Correct/Directory/Path/MyCompany.MySolution.sln . true
 
 You can run a command like so to validate the files are now in the right structure, ready for a NuGet restore to be fired.
 
@@ -55,7 +56,9 @@ You can run a command like so to validate the files are now in the right structu
 
 ### Complete your Dockerfile
 
-Continue on as usual, restoring from your entry point, building, running tests, publishing, etc.
+You'll now be able to run a `restore` against the same entry point, which Docker will cache.
+
+Then just complete your Dockerfile as per usual, copying over the rest of your src, doing your `build`, `test`, `publish`, etc. as needed.
 
 ## Closing remarks
 
