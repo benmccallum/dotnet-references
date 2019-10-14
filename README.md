@@ -1,14 +1,18 @@
 # dotnet-fix-references
 
-![Nuget](https://img.shields.io/nuget/dt/dotnet-fix-references)
+![Nuget](https://img.shields.io/nuget/dt/dotnet-fix-references) <a href="https://www.buymeacoffee.com/benmccallum" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 A dotnet global tool that aids with bulk solution and project file references changes.
 
-> dotnet tool install --global dotnet-fix-references --version 0.0.9
+# Installation
 
-Supports the following modes which have varying use cases.
+```dotnet tool install --global dotnet-fix-references --version 0.0.9```
+
+> Note: If using this in a scripted process you want to be consistent (like a build), you should pin to a specific version with `--version x.y.z`.
 
 # How to use it
+
+Supports the following modes which have varying use cases.
 
 ## Mode 1: Directory-first
 By passing a root directory, the tool will assume that the current directory structure is the source of truth and will fix all project references inside all .sln and .csproj files to the correct relative path.
@@ -36,10 +40,10 @@ Use cases:
 Will do if there's interest or I have a need. (Bit more complicated than 3 as you'd be searching package sources rather than local file system.
 
 Use cases:
-* You've split out from a 
+* You've split out from a mono repo to NuGet packages...
 
 # Word of warning
-Every version until v1.0 could contain breaking changes. 
+Every version until v1.0 could contain breaking changes. You should definitely pin to specific versions until then.
 
 This tool updates/deletes files in-place. Backup anything you care about before running this tool. 
 
