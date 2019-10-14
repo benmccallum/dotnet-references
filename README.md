@@ -54,6 +54,7 @@ This tool updates/deletes files in-place. Backup anything you care about before 
 1.1 Use a console arg parsing library
 1.1 Parse csproj files as XML instead of using regex
 1.1 Better error handling and logging (perhaps with a verbosity argument)
+1. What about other package manager situations other people are struggling with? Perhaps I could extend this approach out to solve the problem on other stacks, like Lerna setups, etc.
 1. Support changed project file names. User would provide a mapping to be used in the processing
 1. Support Mode 4
 1. A rudimentary backup facility? Saving existing files where they were as .ext.bak or something like that
