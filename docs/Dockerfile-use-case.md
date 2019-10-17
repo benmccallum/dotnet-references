@@ -32,15 +32,10 @@ Copy over your .csproj files using whatever technique works best for your situat
 
 ```
 # This results in a layer for each step
-COPY *.csproj .
-COPY */*.csproj .
-COPY some-other-dir/*/*.csproj .
-
-# This is one step but will find all of them without remorse (that aren't .dockerignore'd)
-RUN for file in $(ls *.csproj); do mv $file .; done
-# TODO: Windows version...
-
-# Or some combination of the above
+COPY *.csproj ./
+COPY */*.csproj ./
+COPY */*/*.csproj ./
+COPY some-other-dir/*/*.csproj ./
 ```
 
 ### Run the tool
