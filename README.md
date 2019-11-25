@@ -1,5 +1,5 @@
 # dotnet-fix-references
-A dotnet global tool that fixes references to projects in solution and project files
+A dotnet global tool for manipulating references in solution and project files.
 
 Docs coming soon. In the meantime, every version until v1.0 could contain breaking changes. 
 

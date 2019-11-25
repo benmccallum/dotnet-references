@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public static class Common
     {

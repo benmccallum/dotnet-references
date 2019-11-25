@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "dotnet-fix-references": {
+    "dotnet-references": {
       "commandName": "Project",
       "commandLineArgs": "internalise -wd C:\\BitBucket\\autoguru"
     }

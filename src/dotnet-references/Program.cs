@@ -1,9 +1,9 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using System;
 using System.ComponentModel.DataAnnotations;
-using static BenMcCallum.DotNet.FixReferences.Common;
+using static BenMcCallum.DotNet.References.Common;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public class Program
     {

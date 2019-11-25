@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public enum ErrorCode
     {

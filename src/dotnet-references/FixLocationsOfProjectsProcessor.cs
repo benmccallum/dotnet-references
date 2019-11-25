@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static BenMcCallum.DotNet.FixReferences.Common;
+using static BenMcCallum.DotNet.References.Common;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public static class FixLocationsOfProjectsProcessor
     {
