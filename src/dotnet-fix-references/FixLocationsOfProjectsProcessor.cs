@@ -9,14 +9,14 @@ namespace BenMcCallum.DotNet.FixReferences
 {
     public static class FixLocationsOfProjectsProcessor
     {
-        public static void Process(string slnFilePath, string currentWorkingDirectory, bool removeExtras)
+        public static void Process(string slnFilePath, string workingDirectory, bool removeExtras)
         {
             Console.WriteLine("Starting process with the following args:");
             Console.WriteLine($"Solution File Path: {slnFilePath}");
-            Console.WriteLine($"Current Working Directory: {currentWorkingDirectory}");
+            Console.WriteLine($"Current Working Directory: {workingDirectory}");
             Console.WriteLine($"Remove Extras: {removeExtras}");
 
-            var csProjFilePaths = Directory.GetFiles(currentWorkingDirectory, "*.csproj", SearchOption.AllDirectories);
+            var csProjFilePaths = GetCsProjFilePaths(workingDirectory);
             //Console.WriteLine($"Found {csProjFilePaths.Length} .csproj files in {currentWorkingDirectory}.");
 
             var csProjFilesProcessed = new HashSet<string>();

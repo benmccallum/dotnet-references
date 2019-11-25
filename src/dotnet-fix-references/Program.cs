@@ -1,49 +1,48 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using McMaster.Extensions.CommandLineUtils;
+using System;
+using System.ComponentModel.DataAnnotations;
 using static BenMcCallum.DotNet.FixReferences.Common;
 
 namespace BenMcCallum.DotNet.FixReferences
 {
-    class Program
+    public class Program
     {
-        private static int Main(string[] args)
+        public static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
+
+        [Argument(0, Description = "The mode to run")]
+        [Required]
+        public string Mode { get; set; }
+
+        [Option("-e|--entryPoint", Description = "The entry point to use")]
+        public string EntryPoint { get; set; }
+
+        [Option("-wd|--working-directory", Description = "The working directory to use")]
+        public string WorkingDirectory { get; set; }
+
+        [Option("-rupf|--remove-unreferenced-project-files", Description = "Should unreferenced project files be removed?")]
+        public bool RemoveUnreferencedProjectFiles { get; set; }
+
+        [Option("-reig|--remove-empty-item-groups", Description = "Should ItemGroup elements in project files that are empty be removed?")]
+        public bool RemoveEmptyItemGroups { get; set; }
+
+        public int OnExecute()
         {
             try
-            {
-                if (args == null || !args.Any())
+            { 
+                if (Mode == "fix")
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("An entry point is required. See docs.");
-                    Console.ResetColor();
-                    return 1;
+                    return Fix.Run(EntryPoint, WorkingDirectory, RemoveUnreferencedProjectFiles);
                 }
-
-                var arg0 = args[0];
-                var fileAttrs = File.GetAttributes(arg0);
-
-                if (arg0.EndsWith(".sln"))
+                else if (Mode == "internalise")
                 {
-                    var cwd = args.Length > 1 ? args[1] : Environment.CurrentDirectory;
-                    var removeExtras = args.Length > 2 ? bool.Parse(args[2]) : false;
-                    FixLocationsOfProjectsProcessor.Process(arg0, cwd, removeExtras);
+                    return Internalise.Run(WorkingDirectory, RemoveEmptyItemGroups);
                 }
-                else if (fileAttrs == FileAttributes.Directory)
-                {
-                    FixReferencesToProjectsProcessor.Process(arg0);
-                }
-                else
-                {
-                    throw new ArgumentException("Provided argument wasn't valid.");
-                }
-
-                Console.WriteLine("Done.");
-                return 0;
-            }
+                return WriteError(ErrorCode.ModeArgInvalid);
+            }            
             catch (Exception ex)
             {
-                WriteError("Unexpected error!", ex);
-                return 999;
+                WriteException("Unexpected error!", ex);
+                return WriteError(ErrorCode.Unknown);
             }
         }
     }

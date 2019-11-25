@@ -10,7 +10,7 @@ namespace BenMcCallum.DotNet.FixReferences
         public static void Process(string directoryPath)
         {
             var slnFilePaths = Directory.GetFiles(directoryPath, "*.sln", SearchOption.AllDirectories);
-            var csProjFilePaths = Directory.GetFiles(directoryPath, "*.csproj", SearchOption.AllDirectories);
+            var csProjFilePaths = GetCsProjFilePaths(directoryPath);
 
             foreach (var slnFilePath in slnFilePaths)
             {
@@ -20,7 +20,7 @@ namespace BenMcCallum.DotNet.FixReferences
                 }
                 catch (Exception ex)
                 {
-                    WriteError($"Error fixing references in {slnFilePath}.", ex);
+                    WriteException($"Error fixing references in {slnFilePath}.", ex);
                 }
             }
 
@@ -32,7 +32,7 @@ namespace BenMcCallum.DotNet.FixReferences
                 }
                 catch (Exception ex)
                 {
-                    WriteError($"Error fixing references in {csProjFilePath}.", ex);
+                    WriteException($"Error fixing references in {csProjFilePath}.", ex);
                 }
             }
         }
@@ -81,31 +81,6 @@ namespace BenMcCallum.DotNet.FixReferences
             {
                 Console.WriteLine($"No changes required in {csProjFilePath}");
             }
-        }
-
-        private static string GetRelativePathTo(string fromPath, string toPath)
-        {
-            return GetRelativePathTo(new FileInfo(fromPath), new FileInfo(toPath));
-        }
-
-        private static string GetRelativePathTo(FileSystemInfo from, FileSystemInfo to)
-        {
-            Func<FileSystemInfo, string> getPath = fsi =>
-            {
-                var d = fsi as DirectoryInfo;
-                return d == null ? fsi.FullName : d.FullName.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            };
-
-            var fromPath = getPath(from);
-            var toPath = getPath(to);
-
-            var fromUri = new Uri(fromPath);
-            var toUri = new Uri(toPath);
-
-            var relativeUri = fromUri.MakeRelativeUri(toUri);
-            var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
-
-            return relativePath.Replace('/', Path.DirectorySeparatorChar);
         }
     }
 }
