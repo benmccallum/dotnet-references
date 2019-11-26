@@ -157,8 +157,9 @@ namespace BenMcCallum.DotNet.References
                     var sb = new StringBuilder(200 * missingCsProjPaths.Length);
                     foreach (var missingCsProjPath in missingCsProjPaths)
                     {
+                        var relativeCsProjPath = GetRelativePathTo(slnFilePath, missingCsProjPath);
                         var projName = Path.GetFileNameWithoutExtension(missingCsProjPath);
-                        sb.AppendLine($"Project(\"{slnLevelGuid}\") = \"{projName}\", \"{missingCsProjPath}\", \"{Guid.NewGuid()}\"");
+                        sb.AppendLine($"Project(\"{slnLevelGuid}\") = \"{projName}\", \"{relativeCsProjPath}\", \"{Guid.NewGuid()}\"");
                         sb.AppendLine("EndProject");
                     }
 
