@@ -1,5 +1,7 @@
 # dotnet-fix-references
 
+>**This is the documentation for the original tool `dotnet-fix-references`. You should migrate to the new one.**
+
 ![Nuget](https://img.shields.io/nuget/dt/dotnet-fix-references) <a href="https://www.buymeacoffee.com/benmccallum" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 A dotnet global tool that aids with bulk solution and project file references changes.
@@ -46,15 +48,3 @@ Use cases:
 Every version until v1.0 could contain breaking changes. You should definitely pin to specific versions until then.
 
 This tool updates/deletes files in-place. Backup anything you care about before running this tool. 
-
-# Feature backlog
-1. Support Mode 2 (file-first) via .csproj entry
-1. Support Mode 3
-1. Refactor and code cleanup
-1.1 Use a console arg parsing library
-1.1 Parse csproj files as XML instead of using regex
-1.1 Better error handling and logging (perhaps with a verbosity argument)
-1. What about other package manager situations other people are struggling with? Perhaps I could extend this approach out to solve the problem on other stacks, like Lerna setups, etc.
-1. Support changed project file names. User would provide a mapping to be used in the processing
-1. Support Mode 4
-1. A rudimentary backup facility? Saving existing files where they were as .ext.bak or something like that
