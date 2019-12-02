@@ -1,16 +1,16 @@
 <Project>
 
   <PropertyGroup>
-    <Version>0.0.9</Version>
-    <Description>A dotnet global tool that fixes references to projects in solution and project files.</Description>
+    <Version>0.0.1</Version>
+    <Description>A dotnet global tool for manipulating references in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
-    <Product>dotnet-fix-references</Product>
+    <Product>dotnet-references</Product>
     <Copyright>Copyright © Ben McCallum</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/benmccallum/dotnet-fix-references</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/benmccallum/dotnet-fix-references</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/benmccallum/dotnet-references</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/benmccallum/dotnet-references</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <IsPackable>false</IsPackable>
     <NoPackageAnalysis>true</NoPackageAnalysis>

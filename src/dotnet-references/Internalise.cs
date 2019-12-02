@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using static BenMcCallum.DotNet.FixReferences.Common;
+using static BenMcCallum.DotNet.References.Common;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public static class Internalise
     {
@@ -157,8 +157,9 @@ namespace BenMcCallum.DotNet.FixReferences
                     var sb = new StringBuilder(200 * missingCsProjPaths.Length);
                     foreach (var missingCsProjPath in missingCsProjPaths)
                     {
+                        var relativeCsProjPath = GetRelativePathTo(slnFilePath, missingCsProjPath);
                         var projName = Path.GetFileNameWithoutExtension(missingCsProjPath);
-                        sb.AppendLine($"Project(\"{slnLevelGuid}\") = \"{projName}\", \"{missingCsProjPath}\", \"{Guid.NewGuid()}\"");
+                        sb.AppendLine($"Project(\"{slnLevelGuid}\") = \"{projName}\", \"{relativeCsProjPath}\", \"{Guid.NewGuid()}\"");
                         sb.AppendLine("EndProject");
                     }
 

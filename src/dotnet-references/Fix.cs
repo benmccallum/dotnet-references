@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using static BenMcCallum.DotNet.FixReferences.Common;
+using static BenMcCallum.DotNet.References.Common;
 
-namespace BenMcCallum.DotNet.FixReferences
+namespace BenMcCallum.DotNet.References
 {
     public static class Fix
     {

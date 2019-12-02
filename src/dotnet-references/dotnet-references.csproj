@@ -5,11 +5,11 @@
     <TargetFrameworks>netcoreapp3.0;netcoreapp2.1</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
-    <AssemblyName>dotnet-fix-references</AssemblyName>
+    <AssemblyName>dotnet-references</AssemblyName>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <DebugType>embedded</DebugType>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <RootNamespace>BenMcCallum.DotNet.FixReferences</RootNamespace>
+    <RootNamespace>BenMcCallum.DotNet.References</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
