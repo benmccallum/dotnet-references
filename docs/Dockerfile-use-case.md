@@ -13,7 +13,7 @@ Here's another approach, taking advantage of the fact that dotnet core global to
 First, install this tool by adding the following line to your Dockerfile.
 Note: it's probably a good idea to pin to a specific version to avoid breaking changes.
 
-`RUN dotnet tool install -g dotnet-fix-references --version 0.0.9`
+`RUN dotnet tool install -g dotnet-references --version 0.0.1`
 
 If you're using a Linux image, you'll need to then add the following to make the tool available to be called directly:
 
@@ -38,7 +38,9 @@ COPY some-other-dir/*/*.csproj ./
 
 ### Run the tool
 Run this dotnet global tool at your sln file (or csproj file, coming soon), give it the "root" where all the .csproj files were copied, and optionally pass `true` to delete .csproj files that aren't actuallly in the dependency graph from the entry point.
-> dotnet fix-references ./The/Correct/Directory/Path/MyCompany.MySolution.sln . true
+> dotnet references fix -ep ./The/Correct/Directory/Path/MyCompany.MySolution.sln -wd . -rupf true
+
+(see full details of args [here](../README.md))
 
 You can run a command like so after to validate the files are now in the right structure, ready for a NuGet restore to be fired.
 
