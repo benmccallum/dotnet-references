@@ -1,4 +1,4 @@
-name: CI
+name: NuGet Push
 
 on:
   push:
