@@ -38,7 +38,7 @@ COPY some-other-dir/*/*.csproj ./
 
 ### Run the tool
 Run this dotnet global tool at your sln file (or csproj file, coming soon), give it the "root" where all the .csproj files were copied, and optionally pass `true` to delete .csproj files that aren't actuallly in the dependency graph from the entry point.
-> dotnet references fix -ep ./The/Correct/Directory/Path/MyCompany.MySolution.sln -wd . -rupf true
+> dotnet references fix -ep ./The/Correct/Directory/Path/MyCompany.MySolution.sln -wd . -rupf
 
 (see full details of args [here](../README.md))
 
