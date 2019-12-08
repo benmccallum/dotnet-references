@@ -9,8 +9,6 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <DebugType>embedded</DebugType>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RootNamespace>BenMcCallum.DotNet.References</RootNamespace>
   </PropertyGroup>
 
