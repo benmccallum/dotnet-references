@@ -10,10 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1.0.0
+      
+    - uses: actions/cache@v1
+      id: nuget-cache
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+          
+    - name: Restore with dotnet
+      if: steps.nuget-cache.outputs.cache-hit != 'true'
+      run: dotnet restore
+          
     - name: Build with dotnet
       run: dotnet build --configuration Release
+      
     #- name: Test with dotnet
     #  run: dotnet test
       
@@ -25,5 +40,5 @@ jobs:
       - name: Pack with dotnet
         run: dotnet pack --configuration Release
       - name: Push to nuget with dotnet
-        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json -no-symbols true
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
     
