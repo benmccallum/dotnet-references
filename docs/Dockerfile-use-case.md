@@ -11,9 +11,9 @@ Here's another approach, taking advantage of the fact that dotnet core global to
 
 ### Install the tool
 First, install this tool by adding the following line to your Dockerfile.
-Note: it's probably a good idea to pin to a specific version to avoid breaking changes.
+Note: it's probably a good idea to pin to a specific version to avoid breaking changes by appending ` --version 0.0.x`.
 
-`RUN dotnet tool install -g dotnet-references --version 0.0.1`
+`RUN dotnet tool install -g dotnet-references`
 
 If you're using a Linux image, you'll need to then add the following to make the tool available to be called directly:
 
