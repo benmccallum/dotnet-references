@@ -25,5 +25,5 @@ jobs:
       - name: Pack with dotnet
         run: dotnet pack --configuration Release
       - name: Push to nuget with dotnet
-        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json -no-symbols true
     
