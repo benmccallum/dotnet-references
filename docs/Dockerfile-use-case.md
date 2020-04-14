@@ -51,7 +51,9 @@ You can run a command like so after to validate the files are now in the right s
 
 You'll now be able to run a `restore` against the same entry point, and Docker will cache the result in a layer.
 
-Then just complete your Dockerfile as per usual, copying over the rest of your src, doing your `build`, `test`, `publish`, etc. as needed.
+Then just complete your Dockerfile as per usual, copying over the rest of your src, doing your `build`, `test`, `publish`, etc. as needed. 
+
+Running each separately may seem counter-intuitive, but allows Docker to cache at each layer. When running `build`, `test` or `publish`, you can also pass `--no-restore` to explicitly document that the previous `restore` step has taken care of that. 
 
 ## Closing remarks
 
