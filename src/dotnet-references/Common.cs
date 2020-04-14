@@ -19,15 +19,7 @@ namespace BenMcCallum.DotNet.References
                 .ToArray();
         }
 
-        public static string ExtractCsProjName(string input)
-        {
-            var lastSlashIndex = input.LastIndexOf('\\');
-            if (lastSlashIndex > 0)
-            {
-                input = input.Substring(lastSlashIndex + 1);
-            }
-            return input.TrimEnd('\"');
-        }
+        public static string ExtractCsProjName(string input) => Path.GetFileName(input);
 
         public static string FindCsProjFilePath(string[] csProjFilePaths, string csProjFileName)
         {

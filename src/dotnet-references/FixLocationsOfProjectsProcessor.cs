@@ -44,9 +44,7 @@ namespace BenMcCallum.DotNet.References
                 return;
             }
 
-            var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value)
-                // Replacing slashes so Linux doesn't freak out
-                .Replace("\\", "/");
+            var csProjReferenceRelativePath = ExtractCsProjReferenceRelativePath(match.Value);
 
             // Find where it currently is
             var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
@@ -60,7 +58,7 @@ namespace BenMcCallum.DotNet.References
             // Far out docker... https://github.com/docker/for-win/issues/1051
             // File.Move(csProjFilePath, newCsProjFilePath);
             File.Copy(csProjFilePath, newCsProjFilePath);
-            File.Delete(csProjFilePath);            
+            File.Delete(csProjFilePath);
 
             // Mark that we've moved this one
             csProjFilesProcessed.Add(csProjFileName);
@@ -87,7 +85,10 @@ namespace BenMcCallum.DotNet.References
             {
                 input = input.Substring(firstQuoteIndex + 1);
             }
-            return input.TrimEnd('\"');
+            return input
+                // Replacing slashes so Linux doesn't freak out
+                .Replace("\\", "/")
+                .TrimEnd('\"');
         }
     }
 }
