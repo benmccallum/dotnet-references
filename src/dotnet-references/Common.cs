@@ -19,7 +19,20 @@ namespace BenMcCallum.DotNet.References
                 .ToArray();
         }
 
-        public static string ExtractCsProjName(string input) => Path.GetFileName(input);
+        public static string ExtractCsProjName(string input)
+        {
+            // Needs to handle the following inputs:
+            //   - ", \"SomeProject\SomeProject.csproj\"" (a reference to a project from a .sln file)
+            //   - "SomeProject\SomeProject.csproj" (a reference to a project from a .csproj file)
+
+            var normalizedInput = input.Replace("\\", "/");
+            var lastSlashIndex = normalizedInput.LastIndexOf('/');
+            if (lastSlashIndex > 0)
+            {
+                normalizedInput = normalizedInput.Substring(lastSlashIndex + 1);
+            }
+            return normalizedInput.TrimEnd('\"');
+        }
 
         public static string FindCsProjFilePath(string[] csProjFilePaths, string csProjFileName)
         {
