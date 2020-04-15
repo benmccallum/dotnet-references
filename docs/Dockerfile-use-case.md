@@ -42,6 +42,8 @@ Run this dotnet global tool at your sln file (or csproj file, coming soon), give
 
 (see full details of args [here](../README.md))
 
+> :warning: If the dotnet cli complains with "Specify which project file to use because this '...' contains more than one project file.", you've run into a limitation of the cli. Essentially it can't execute when the current working directory you're in contains more than one project file (and potentially even solution files too). Since we can pass anything to the -ep and -wd arguments, it doesn't matter what directory you execute `dotnet references` from, so the easiest way to workaround this is to just go to a random directory (you've already got or that you create) and execute from there, adjusting the -ep and -wd arguments as necessary. (eg. `RUN mkdir temp && cd temp && dotnet references fix -ep ../MyCompany.MySolution.sln -wd .. -rupf`)
+
 You can run a command like so after to validate the files are now in the right structure, ready for a NuGet restore to be fired.
 
 `RUN ls  . -alR`
