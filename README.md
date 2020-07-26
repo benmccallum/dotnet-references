@@ -67,15 +67,7 @@ Use cases:
 
 Note: It currently doesn't handle transitive dependencies (dependencies of dependencies), which you'll need to add manually.
 
-## Mode 4: ProjectReference --> PackageReference
-Will do if there's interest or I have a need. (Bit more complicated than 3 as you'd be searching package sources rather than local file system.
-
-Use cases:
-* You've split out from a mono repo to NuGet packages...
-
 # Word of warning
-Every version until v1.0 could contain breaking changes. You should definitely pin to specific versions until then.
-
 This tool updates/deletes files in-place. Backup anything you care about before running this tool. 
 
 # Feature backlog
