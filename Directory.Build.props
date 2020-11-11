@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup>
     <Version>0.0.7</Version>
     <Description>A dotnet global tool for manipulating references in solution and project files.</Description>
@@ -18,5 +17,4 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateFullPaths Condition="'$(TERM_PROGRAM)' == 'vscode'">true</GenerateFullPaths>
   </PropertyGroup>
-
 </Project>
