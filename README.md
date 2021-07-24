@@ -49,7 +49,7 @@ Use cases:
  You have moved your source code into a new folder structure (via a script or otherwise) and don't want to manually updates all your project references in .sln and .csproj files. (Project file names must be the same).
 
 ### File-first
-By passing a .sln file, the tool will assume the it, and all .csproj files in the dependency tree, are the source of truth, creating and moving the .csproj files into the correct directory structure.
+By passing a .sln file, the tool will assume that it, and the path it references .csproj files, is the source of truth; thus moving the .csproj files into the correct directory structure.
 
 > dotnet references fix -ep Company.Project.sln
 
