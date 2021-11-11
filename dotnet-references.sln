@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29318.209
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31903.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-references", "src\dotnet-references\dotnet-references.csproj", "{93798B54-012B-4DDD-BD14-FCB4CC61D720}"
 EndProject
@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".dotfiles", ".dotfiles", "{
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		docs\Dockerfile-use-case.md = docs\Dockerfile-use-case.md
+		.github\workflows\nuget-push.yml = .github\workflows\nuget-push.yml
 		docs\README-dotnet-fix-references.md = docs\README-dotnet-fix-references.md
 		README.md = README.md
 	EndProjectSection
