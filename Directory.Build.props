@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>0.0.8</Version>
+    <Version>1.0.0-preview.1</Version>
     <Description>A dotnet global tool for manipulating references in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
     <Product>dotnet-references</Product>
@@ -13,7 +13,6 @@
     <RepositoryType>git</RepositoryType>
     <IsPackable>false</IsPackable>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-    <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateFullPaths Condition="'$(TERM_PROGRAM)' == 'vscode'">true</GenerateFullPaths>
   </PropertyGroup>
