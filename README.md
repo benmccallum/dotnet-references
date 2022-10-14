@@ -38,7 +38,7 @@ Supports the following modes which have varying use cases.
 ## Mode 1: Fix
 This mode can fix references between solution files and projects in one of two ways.
 
-> :warning: If the dotnet cli complains with "Specify which project file to use because this '...' contains more than one project file.", you've run into a limitation of the cli. A workaround is to execute from any random directory and utilise the `-ep` and `-wd`  args. (eg. `mkdir temp && cd temp && dotnet references fix -ep ../ -wd .. -rupf` (or `-ep ../Company.Project.sln -wd ..`)).
+> :warning: If the dotnet cli complains with "Specify which project file to use because this '...' contains more than one project file.", you've run into a limitation of the dotnet cli. A workaround is to execute from any random directory and utilise the `-ep` and `-wd`  args. (eg. `mkdir temp && cd temp && dotnet references fix -ep ../ -wd .. -rupf` (or `-ep ../Company.Project.sln -wd ..`)).
 
 ### Directory-first 
 By passing a directory as the entry, the tool will assume that the current directory structure is the source of truth and will fix all project references inside all .sln and .csproj files to the correct relative path.
