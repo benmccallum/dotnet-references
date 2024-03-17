@@ -7,14 +7,19 @@ namespace BenMcCallum.DotNet.References
 {
     public static class Common
     {
-        public static Regex SlnFileCsProjRegex = new Regex(", \"(.*).csproj\"", RegexOptions.Compiled);
-        public static Regex CsProjRegex = new Regex("Include=\"(.*).csproj\"", RegexOptions.Compiled);
+        public static Regex SlnFileCsProjRegex = new(", \"(.*).csproj\"", RegexOptions.Compiled);
+        public static Regex CsProjRegex = new("Include=\"(.*).csproj\"", RegexOptions.Compiled);
+        public static Regex PackageReferenceRegex = new(
+            "Include=\"(?<name>.*)\" Version=\"(?<version>.*)\"", 
+            RegexOptions.Compiled);
 
         public static string[] GetCsProjFilePaths(string workingDirectory)
         {
             return Directory.GetFiles(workingDirectory, "*.csproj", SearchOption.AllDirectories)
                 // Excluding those in pesky NuGet package folders
                 .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}packages{Path.DirectorySeparatorChar}"))
+                // and node_modules folders 
+                .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}node_modules{Path.DirectorySeparatorChar}"))
                 .OrderBy(path => path)
                 .ToArray();
         }

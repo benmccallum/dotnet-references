@@ -3,6 +3,7 @@
     public enum Mode
     {
         Fix,
-        Internalise
+        Internalise,
+        Centralise
     }
 }

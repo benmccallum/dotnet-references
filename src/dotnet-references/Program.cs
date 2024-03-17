@@ -37,6 +37,10 @@ namespace BenMcCallum.DotNet.References
                 {
                     return Internalise.Run(WorkingDirectory, RemoveEmptyItemGroups);
                 }
+                else if (Mode == Mode.Centralise)
+                {
+                    return Centralise.Run(EntryPoint, WorkingDirectory);
+                }
                 return WriteError(ErrorCode.ModeArgInvalid);
             }            
             catch (Exception ex)

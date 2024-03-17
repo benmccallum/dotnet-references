@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-references": {
       "commandName": "Project",
-      "commandLineArgs": "internalise -wd C:\\BitBucket\\autoguru"
+      "commandLineArgs": "centralise -ep AutoGuru.sln -wd D:\\repos\\autoguru\\src"
     }
   }
 }
