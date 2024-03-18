@@ -55,6 +55,7 @@ public static class Centralise
     private static void ProcessSolutionFile(string slnFilePath, string workingDirectory)
     {
         var slnFileContents = File.ReadAllText(slnFilePath);
+        var slnFileDirectoryPath = Path.GetDirectoryName(slnFilePath)!;
 
         var csProjFilePaths = GetCsProjFilePaths(workingDirectory);
 
@@ -101,8 +102,27 @@ public static class Centralise
                     xElements = packageVersions[packageVersion]
                         = new List<PackageReference>();
                 }
+
                 xElements.Add(new(xPackageRef, csProjFilePath));
             }
+        }
+
+        var existingVersionVariables = new Dictionary<string, string>();
+        if (slnFilePath.Contains("AutoGuru"))
+        {
+            var directoryBuildPropsFilePath = Path.Combine(slnFileDirectoryPath, "Directory.Build.props");
+            var xDirectoryBuildProps = XDocument.Load(directoryBuildPropsFilePath);
+
+            existingVersionVariables = xDirectoryBuildProps.Descendants()
+                .Where(e =>
+                    e.Parent is not null &&
+                    e.Parent.Name.LocalName == "PropertyGroup" &&
+                    e.Name.LocalName.EndsWith("Version"))
+                .ToDictionary(
+                    e => e.Name.LocalName,
+                    e => e.Value);
+
+            Console.WriteLine("Init'd existing version variables dictionary");
         }
 
         // Build up a Directory.Packages.props file
@@ -130,7 +150,16 @@ public static class Centralise
             var packageName = singleVersionedPackage.Key;
             var packageVersion = versionWithElementsKvp.Key;
 
-            var xPackageReference = new XElement("PackageReference");
+            //if (packageVersion.StartsWith("$"))
+            //{
+            //    var versionVariableName = packageVersion.Substring(2, packageVersion.Length - 3);
+            //    if (existingVersionVariables.TryGetValue(versionVariableName, out var actualVersion))
+            //    {
+            //        packageVersion = actualVersion;
+            //    }
+            //}
+
+            var xPackageReference = new XElement("PackageVersion");
             xPackageReference.SetAttributeValue("Include", packageName);
             xPackageReference.SetAttributeValue("Version",  packageVersion);
             xItemGroup.Add(xPackageReference);
@@ -160,7 +189,7 @@ public static class Centralise
         }
 
         var directoryPackagePropsFilePath = Path.Combine(
-            Path.GetDirectoryName(slnFilePath)!, 
+            slnFileDirectoryPath, 
             "Directory.Packages.props");
         Console.WriteLine($"Saving {directoryPackagePropsFilePath}.");
         xProject.Document!.Save(directoryPackagePropsFilePath);
@@ -172,6 +201,7 @@ public static class Centralise
             modifiedPackageRef.Element.Document!.Save(
                 modifiedPackageRef.CsProjFilePath);
 
+            // Dodgy as, but preserves the formatting we like on our csproj files
             var sb = new StringBuilder();
             foreach (var line in File.ReadAllLines(modifiedPackageRef.CsProjFilePath).Skip(1))
             {
@@ -186,20 +216,8 @@ public static class Centralise
                     sb.AppendLine(line);
                 }
             }
-
             File.WriteAllText(modifiedPackageRef.CsProjFilePath, sb.ToString());
         }
-
-        //var sb = new StringBuilder(
-        //    $"{singleVersionedPackages.Length} packages have a consistent version for central versioning." +
-        //    $"The below block can be copied into your central Directory.Packages.props file per " +
-        //    $"https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management");
-        //foreach (var package in singleVersionedPackages) 
-        //{
-        //    sb.AppendLine($"<PackageVersion Include=\"{package.Key}\" Version=\"{package.Value.Single()}\" />");
-        //}
-        //Console.WriteLine(sb.ToString());
-        //Console.WriteLine();
 
         // Output helpful JSON for those that are trickier to centralise
         var multiVersionedPackages = packageReferences
