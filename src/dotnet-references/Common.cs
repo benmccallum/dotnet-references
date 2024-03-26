@@ -24,6 +24,17 @@ namespace BenMcCallum.DotNet.References
                 .ToArray();
         }
 
+        public static string[] GetDirectoryBuildPropsFilePaths(string workingDirectory)
+        {
+            return Directory.GetFiles(workingDirectory, "Directory.Build.props", SearchOption.AllDirectories)
+                // Excluding those in pesky NuGet package folders
+                .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}packages{Path.DirectorySeparatorChar}"))
+                // and node_modules folders 
+                .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}node_modules{Path.DirectorySeparatorChar}"))
+                .OrderBy(path => path)
+                .ToArray();
+        }
+
         public static string ExtractCsProjName(string input)
         {
             // Needs to handle the following inputs:

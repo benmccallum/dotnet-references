@@ -58,27 +58,36 @@ public static class Centralise
         var slnFileContents = File.ReadAllText(slnFilePath);
         var slnFileDirectoryPath = Path.GetDirectoryName(slnFilePath)!;
 
-        var existingVersionVariables = new Dictionary<string, string>();
+        var csProjFilePaths = GetCsProjFilePaths(workingDirectory);
+        var directoryBuildPropsFilePaths = GetDirectoryBuildPropsFilePaths(workingDirectory);
+
+        var existingVersionVariables = new Dictionary<string, List<VersionVariable>>();
         if (slnFilePath.Contains("AutoGuru"))
         {
-            var directoryBuildPropsFilePath = Path.Combine(slnFileDirectoryPath, "Directory.Build.props");
-            var xDirectoryBuildProps = XDocument.Load(directoryBuildPropsFilePath);
+            foreach (var directoryBuildPropsFilePath in directoryBuildPropsFilePaths)
+            {
+                var xDirectoryBuildProps = XDocument.Load(directoryBuildPropsFilePath);
 
-            existingVersionVariables = xDirectoryBuildProps.Descendants()
-                .Where(e =>
-                    e.Parent is not null &&
-                    e.Parent.Name.LocalName == "PropertyGroup" &&
-                    e.Name.LocalName.EndsWith("Version"))
-                .ToDictionary(
-                    e => e.Name.LocalName,
-                    e => e.Value);
+                var xVersionVariables = xDirectoryBuildProps.Descendants()
+                    .Where(e =>
+                        e.Parent is not null &&
+                        e.Parent.Name.LocalName == "PropertyGroup" &&
+                        e.Name.LocalName.EndsWith("Version"));
+                foreach (var xVersionVariable in xVersionVariables)
+                { 
+                    if (!existingVersionVariables.TryGetValue(
+                            xVersionVariable.Value, 
+                            out List<VersionVariable>? value))
+                    {
+                        existingVersionVariables[xVersionVariable.Name.LocalName] = 
+                            value = new List<VersionVariable>();
+                    }
+                    value.Add(new VersionVariable(xVersionVariable, directoryBuildPropsFilePath));
+                }
 
-            Console.WriteLine("Init'd existing version variables dictionary");
+                Console.WriteLine("Init'd existing version variables dictionary");
+            }
         }
-
-        var csProjFilePaths = GetCsProjFilePaths(workingDirectory);
-
-        // TODO: Also look for .props files that might be adding packages
 
         // For all .csproj files that are referenced by the .sln file,
         // pull out nuget package references (name, versions)
@@ -97,39 +106,24 @@ public static class Centralise
             var csProjFileName = ExtractCsProjName(match.Value);
             var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
 
-            XDocument xmlDoc = XDocument.Load(csProjFilePath);
-            foreach (var xPackageRef in xmlDoc.Descendants("PackageReference"))
-            {
-                var packageName = xPackageRef.Attribute("Include")?.Value
-                    ?? xPackageRef.Descendants("Include").SingleOrDefault()?.Value
-                    ?? throw new Exception($"Couldn't find package name in {csProjFilePath}");
-                if (!packageReferences.TryGetValue(packageName, out var packageVersions))
-                {
-                    packageVersions = packageReferences[packageName] 
-                        = new Dictionary<string, List<PackageReference>>();
-                }
+            var xmlDoc = XDocument.Load(csProjFilePath);
 
-                var packageVersion = xPackageRef.Attribute("Version")?.Value
-                    ?? xPackageRef.Descendants("Version").SingleOrDefault()?.Value
-                    ?? throw new Exception(
-                        $"Couldn't find package version for {packageName} in {csProjFilePath}");
-                if (packageVersion.StartsWith("$"))
-                {
-                    var versionVariableName = packageVersion[2..^1];
-                    if (existingVersionVariables.TryGetValue(versionVariableName, out var actualVersion))
-                    {
-                        packageVersion = actualVersion;
-                    }
-                }
+            ExtractPackageReferences(
+                existingVersionVariables, 
+                packageReferences, 
+                csProjFilePath, 
+                xmlDoc);
+        }
 
-                if (!packageVersions.TryGetValue(packageVersion, out var xElements))
-                {
-                    xElements = packageVersions[packageVersion]
-                        = new List<PackageReference>();
-                }
+        foreach (var directoryBuildPropsFilePath in directoryBuildPropsFilePaths)
+        {
+            var xmlDoc = XDocument.Load(directoryBuildPropsFilePath);
 
-                xElements.Add(new(xPackageRef, csProjFilePath));
-            }
+            ExtractPackageReferences(
+                existingVersionVariables, 
+                packageReferences, 
+                directoryBuildPropsFilePath, 
+                xmlDoc);
         }
 
         // Build up a Directory.Packages.props file
@@ -198,10 +192,10 @@ public static class Centralise
 
             var msg = $"Centralised {packageName} @ {highestVersion}" +
                 (hasSingleVersion
-                    ? ", however multiple versions were used for this package " +
+                    ? "."
+                    : ", however multiple versions were used for this package " +
                         "so version overrides were put in place for the following " +
-                        $"other versions: {string.Join(", ", versionOverrides)}."
-                    : "");
+                        $"other versions: {string.Join(", ", versionOverrides)}.");
             Console.WriteLine(msg);
         }
 
@@ -213,16 +207,16 @@ public static class Centralise
 
         foreach (var modifiedPackageRef in modifiedPackageReferences)
         {
-            Console.WriteLine($"Saving changes to {modifiedPackageRef.CsProjFilePath}");
+            Console.WriteLine($"Saving changes to {modifiedPackageRef.FilePath}");
 
             modifiedPackageRef.Element.Document!.Save(
-                modifiedPackageRef.CsProjFilePath);
+                modifiedPackageRef.FilePath);
 
             // Dodgy as, but preserves the formatting we like on our csproj files
             // TODO: Explore Microsoft.Build.Evaluation instead
             // which might make modifying the project and saving it as before easier
             var sb = new StringBuilder();
-            foreach (var line in File.ReadAllLines(modifiedPackageRef.CsProjFilePath).Skip(1))
+            foreach (var line in File.ReadAllLines(modifiedPackageRef.FilePath).Skip(1))
             {
                 if (line.StartsWith("<Project") ||
                     line.StartsWith("  </"))
@@ -235,8 +229,10 @@ public static class Centralise
                     sb.AppendLine(line);
                 }
             }
-            File.WriteAllText(modifiedPackageRef.CsProjFilePath, sb.ToString());
+            File.WriteAllText(modifiedPackageRef.FilePath, sb.ToString());
         }
+
+        // TODO: Remove version variables too
 
         // Output helpful JSON for those that are trickier to centralise
         var multiVersionedPackages = packageReferences
@@ -255,17 +251,69 @@ public static class Centralise
         Console.WriteLine();
     }
 
+    private static void ExtractPackageReferences(
+        Dictionary<string, List<VersionVariable>> existingVersionVariables, 
+        Dictionary<string, Dictionary<string, List<PackageReference>>> packageReferences, 
+        string filePath, 
+        XDocument xmlDoc)
+    {
+        foreach (var xPackageRef in xmlDoc.Descendants("PackageReference"))
+        {
+            var packageName = xPackageRef.Attribute("Include")?.Value
+                ?? xPackageRef.Descendants("Include").SingleOrDefault()?.Value
+                ?? throw new Exception($"Couldn't find package name in {filePath}");
+            if (!packageReferences.TryGetValue(packageName, out var packageVersions))
+            {
+                packageVersions = packageReferences[packageName]
+                    = new Dictionary<string, List<PackageReference>>();
+            }
+
+            var packageVersion = xPackageRef.Attribute("Version")?.Value
+                ?? xPackageRef.Descendants("Version").SingleOrDefault()?.Value
+                ?? throw new Exception(
+                    $"Couldn't find package version for {packageName} in {filePath}");
+            int maxCycles = 50;
+            int cycles = 1;
+            while (packageVersion.StartsWith('$') &&
+                cycles <= maxCycles)
+            {
+                var versionVariableName = packageVersion[2..^1];
+                if (existingVersionVariables.TryGetValue(versionVariableName, out var versionVariables))
+                {
+                    // this breakpoint isn't being hit but should be... hmm
+                    foreach (var versionVariable in versionVariables
+                        .Where(vv => filePath.StartsWith(Path.GetDirectoryName(vv.FilePath)!))
+                        .OrderByDescending(vv => vv.FilePath.Length)
+                        .Take(1))
+                    {
+                        packageVersion = versionVariable.Element.Value;
+                    }
+                }
+                cycles++;
+            }
+
+            if (!packageVersions.TryGetValue(packageVersion, out var xElements))
+            {
+                xElements = packageVersions[packageVersion]
+                    = new List<PackageReference>();
+            }
+
+            xElements.Add(new(xPackageRef, filePath));
+        }
+    }
+
     private static string GetHighestPackageVersion(
         string packageName,
         IEnumerable<string> versions)
     {
-        if (versions.Count() > 1)
+        if (versions.Count() <= 1)
         {
             throw new ArgumentException("Comparison shouldn't be made", nameof(versions));
         }
 
         string? highestVersion = null;
         SemVersion? highestSemVer = null;
+        int[]? highestVersionBits = null;
         foreach (var version in versions)
         {
             bool isVariable = version.Contains('*') || version.StartsWith("^");
@@ -274,11 +322,36 @@ public static class Centralise
                 continue;
             }
 
-            var semVer = SemVersion.Parse(version, SemVersionStyles.Strict);
-            if (semVer.ComparePrecedenceTo(highestSemVer) > 0)
+            if (highestVersionBits is null &&
+                SemVersion.TryParse(version, SemVersionStyles.Strict, out var semVer))
             {
-                highestVersion = version;
-                highestSemVer = semVer;
+                if (highestSemVer is null ||
+                    semVer.ComparePrecedenceTo(highestSemVer) > 0)
+                {
+                    highestVersion = version;
+                    highestSemVer = semVer;
+                }
+            }
+            else if (highestSemVer is null)
+            {
+                var gotBits = TryGetVersionBits(version, out var thisVersionBits);
+                if (highestVersionBits is null && gotBits)
+                {
+                    highestVersionBits = thisVersionBits;
+                }
+                else if (
+                    highestVersionBits is not null && gotBits &&
+                    highestVersionBits.Length == thisVersionBits.Length)
+                {
+                    for (int i = 0; i < thisVersionBits.Length; i++)
+                    {
+                        if (thisVersionBits[i] > highestVersionBits[i])
+                        {
+                            highestVersionBits = thisVersionBits;
+                            break;
+                        }
+                    }
+                }
             }
         }
         
@@ -298,5 +371,28 @@ public static class Centralise
         return highestVersion;
     }
 
-    private record PackageReference(XElement Element, string CsProjFilePath);
+    private static bool TryGetVersionBits(string version, out int[] bits)
+    {
+        var indexOfPlus = version.IndexOf('+');
+        var sanitizedVersion = indexOfPlus > 0
+            ? version.Substring(0, indexOfPlus)
+            : version;
+        var strBits = sanitizedVersion
+            .Split('.')
+            .ToArray();
+        bits = new int[strBits.Length];
+        for (int i = 0; i < strBits.Length; i++)
+        {
+            var strBit = strBits[i];
+            if (!int.TryParse(strBit, out var bit))
+            {
+                return false;
+            }
+            bits[i] = bit;
+        }
+        return true;
+    }
+
+    private record PackageReference(XElement Element, string FilePath);
+    private record VersionVariable(XElement Element, string FilePath);
 }
