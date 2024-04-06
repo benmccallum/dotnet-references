@@ -280,7 +280,6 @@ public static class Centralise
                 var versionVariableName = packageVersion[2..^1];
                 if (existingVersionVariables.TryGetValue(versionVariableName, out var versionVariables))
                 {
-                    // this breakpoint isn't being hit but should be... hmm
                     foreach (var versionVariable in versionVariables
                         .Where(vv => filePath.StartsWith(Path.GetDirectoryName(vv.FilePath)!))
                         .OrderByDescending(vv => vv.FilePath.Length)
@@ -316,7 +315,7 @@ public static class Centralise
         int[]? highestVersionBits = null;
         foreach (var version in versions)
         {
-            bool isVariable = version.Contains('*') || version.StartsWith("^");
+            bool isVariable = version.Contains('*') || version.StartsWith('^');
             if (isVariable)
             {
                 continue;
