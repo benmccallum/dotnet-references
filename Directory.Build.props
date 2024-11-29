@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>1.2.0</Version>
+    <Version>9.0.0</Version>
     <Description>A dotnet global tool for manipulating references in solution and project files.</Description>
     <Authors>Ben McCallum</Authors>
     <Product>dotnet-references</Product>
