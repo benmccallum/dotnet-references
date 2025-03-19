@@ -42,7 +42,7 @@ namespace BenMcCallum.DotNet.References
             }
             catch (Exception ex)
             {
-                WriteException($"Could not find csproj file path for: '{ csProjFileName}'.", ex);
+                WriteException($"Could not find csproj file path for: '{csProjFileName}'.", ex);
                 throw;
             }
         }
@@ -54,11 +54,12 @@ namespace BenMcCallum.DotNet.References
 
         public static string GetRelativePathTo(FileSystemInfo from, FileSystemInfo to)
         {
-            Func<FileSystemInfo, string> getPath = fsi =>
+            static string getPath(FileSystemInfo fsi)
             {
-                var d = fsi as DirectoryInfo;
-                return d == null ? fsi.FullName : d.FullName.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            };
+                return fsi is DirectoryInfo d
+                    ? d.FullName.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar
+                    : fsi.FullName;
+            }
 
             var fromPath = getPath(from);
             var toPath = getPath(to);

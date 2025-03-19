@@ -13,7 +13,7 @@ namespace BenMcCallum.DotNet.References
 
     public static class Errors
     {
-        public static Dictionary<ErrorCode, string> ErrorMessages = new Dictionary<ErrorCode, string>()
+        public static readonly IReadOnlyDictionary<ErrorCode, string> ErrorMessages = new Dictionary<ErrorCode, string>
         {
             { ErrorCode.Unknown, "An unknown error occurred." },
             { ErrorCode.ModeArgInvalid, "An invalid Mode argument was given." },

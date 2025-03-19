@@ -1,6 +1,6 @@
-﻿using McMaster.Extensions.CommandLineUtils;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using McMaster.Extensions.CommandLineUtils;
 using static BenMcCallum.DotNet.References.Common;
 
 namespace BenMcCallum.DotNet.References
@@ -13,7 +13,7 @@ namespace BenMcCallum.DotNet.References
         [Required]
         public Mode Mode { get; set; }
 
-        [Option("-ep|--entry-point", Description = "The entry point to use (a .sln file or a directory)")]
+        [Option("-ep|--entry-point", Description = "The entry point to use (a .sln file, .slnf file or a directory)")]
         public string EntryPoint { get; set; }
 
         [Option("-wd|--working-directory", Description = "The working directory to use")]

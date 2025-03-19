@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-references": {
       "commandName": "Project",
-      "commandLineArgs": "internalise -wd C:\\BitBucket\\autoguru"
+      "commandLineArgs": "fix -ep AutoGuru.AuthService.slnf -wd \"D:/repos/temp/file moving test 2\" -rupf"
     }
   }
 }
