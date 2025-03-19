@@ -13,11 +13,11 @@ namespace BenMcCallum.DotNet.References
         [Required]
         public Mode Mode { get; set; }
 
-        [Option("-ep|--entry-point", Description = "The entry point to use (a .sln file or a directory)")]
-        public string EntryPoint { get; set; }
+        [Option("-ep|--entry-point", Description = "The entry point to use (a .sln file, .slnf file or a directory)")]
+        public string? EntryPoint { get; set; }
 
         [Option("-wd|--working-directory", Description = "The working directory to use")]
-        public string WorkingDirectory { get; set; }
+        public string? WorkingDirectory { get; set; }
 
         [Option("-rupf|--remove-unreferenced-project-files", Description = "Should unreferenced project files be removed?")]
         public bool RemoveUnreferencedProjectFiles { get; set; }

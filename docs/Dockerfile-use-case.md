@@ -24,7 +24,9 @@ Next, copy over a .sln file that serves as an "entry point" for tracking down th
 ### Prime the files
 `COPY MyCompany.MySolution.sln ./The/Correct/Directory/Path/`
 
-> (Alternatively, you can use a .csproj as an entry, coming soon...)
+> Alternatively, you can use a .slnf as an entry, as long as you have both files copied
+
+> (.csproj as an entry can be built if desired)
 
 Copy over your .csproj files using whatever technique works best for your situation.
 

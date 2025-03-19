@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using static BenMcCallum.DotNet.References.Common;
@@ -11,7 +7,7 @@ namespace BenMcCallum.DotNet.References
 {
     public static class Internalise
     {
-        public static int Run(string workingDirectory, bool removeEmptyItemGroups)
+        public static int Run(string? workingDirectory, bool removeEmptyItemGroups)
         {
             if (string.IsNullOrWhiteSpace(workingDirectory))
             {
@@ -19,7 +15,6 @@ namespace BenMcCallum.DotNet.References
             }
 
             var csProjFilePaths = GetCsProjFilePaths(workingDirectory);
-            //File.WriteAllText("C:\\BitBucket\\lol.txt", string.Join(Environment.NewLine, csProjFilePaths));
 
             ProcessProjectFiles(csProjFilePaths, removeEmptyItemGroups);
 
@@ -41,7 +36,7 @@ namespace BenMcCallum.DotNet.References
                 var xmlDocument = new XmlDocument();
                 xmlDocument.LoadXml(xml);
 
-                var projectElement = xmlDocument.GetElementsByTagName("Project")[0];
+                var projectElement = xmlDocument.GetElementsByTagName("Project")[0]!;
                 var xmlns = projectElement.NamespaceURI;
 
                 var packageReferenceElements = xmlDocument.GetElementsByTagName("PackageReference");
@@ -53,24 +48,22 @@ namespace BenMcCallum.DotNet.References
                 // Find or create an ItemGroup element to add project references to
                 //  - First, by looking for one used by existing project references,
                 //  - Else, by creating one (will be appended to document later)
-                XmlNode itemGroupElement = null;
+                XmlNode? itemGroupElement = null;
                 var projectReferenceElements = xmlDocument.GetElementsByTagName("ProjectReference");
                 if (projectReferenceElements.Count > 0)
                 {
-                    itemGroupElement = projectReferenceElements[0].ParentNode;
+                    itemGroupElement = projectReferenceElements[0]!.ParentNode;
                 }
-                else
-                {
-                    itemGroupElement = xmlDocument.CreateElement("ItemGroup", xmlns);
-                }
+                itemGroupElement ??= xmlDocument.CreateElement("ItemGroup", xmlns);
 
                 // Convert package references to internal project references if 
                 // a package name matches a project name in the working directory
                 for (var i = packageReferenceElements.Count - 1; i >= 0; i--)
                 {
-                    var packageReferenceElement = packageReferenceElements[i];
+                    var packageReferenceElement = packageReferenceElements[i]!;
 
-                    var packageName = packageReferenceElement.Attributes["Include"].Value;
+                    var packageName = packageReferenceElement.Attributes?["Include"]?.Value
+                        ?? throw new InvalidOperationException("Missing Include attribute");
                     if (!csProjFilePathsByName.ContainsKey(packageName))
                     {
                         continue;
@@ -89,14 +82,14 @@ namespace BenMcCallum.DotNet.References
                     // Recurse package's dependencies, as transitive ones are needed too
 
                     // Delete old reference
-                    packageReferenceElement.ParentNode.RemoveChild(packageReferenceElement);
+                    packageReferenceElement.ParentNode!.RemoveChild(packageReferenceElement);
                 }
 
                 // If we had to create the project references under a new ItemGroup element, 
                 // it can now be added to the document, directly after the group containing the package references.
                 if (itemGroupElement.ChildNodes.Count > 0 && itemGroupElement.ParentNode == null)
                 {
-                    projectElement.InsertAfter(itemGroupElement, packageReferenceElements[0].ParentNode);
+                    projectElement.InsertAfter(itemGroupElement, packageReferenceElements[0]!.ParentNode);
                 }
 
                 // Clean out empty ItemGroup elements
@@ -114,10 +107,10 @@ namespace BenMcCallum.DotNet.References
             var itemGroupElements = xmlDocument.GetElementsByTagName("ItemGroup");
             for (var i = itemGroupElements.Count - 1; i >= 0; i--)
             {
-                var itemGroupEle = itemGroupElements[i];
-                if (itemGroupEle.Attributes.Count == 0 && itemGroupEle.ChildNodes.Count == 0)
+                var itemGroupEle = itemGroupElements[i]!;
+                if (itemGroupEle.Attributes?.Count == 0 && itemGroupEle.ChildNodes.Count == 0)
                 {
-                    itemGroupEle.ParentNode.RemoveChild(itemGroupEle);
+                    itemGroupEle.ParentNode!.RemoveChild(itemGroupEle);
                 }
             }
         }

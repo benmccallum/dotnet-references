@@ -10,10 +10,15 @@
     <DebugType>embedded</DebugType>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <RootNamespace>BenMcCallum.DotNet.References</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
+	  
+	<!-- Bring this in when adding support for slnx -->
+    <!--<PackageReference Include="Microsoft.VisualStudio.SolutionPersistence" Version="1.0.52" />-->
   </ItemGroup>
 
 </Project>
