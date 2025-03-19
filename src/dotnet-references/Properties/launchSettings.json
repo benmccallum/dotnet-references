@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-references": {
       "commandName": "Project",
-      "commandLineArgs": "fix -ep AutoGuru.AuthService.slnf -wd \"D:/repos/temp/file moving test 3\" -rupf"
+      "commandLineArgs": "fix -ep AutoGuru.AuthService.slnf -wd \"D:/repos/temp/file moving test 5\" -rupf"
     }
   }
 }
