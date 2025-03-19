@@ -122,7 +122,7 @@ namespace BenMcCallum.DotNet.References
         {
             foreach (var csProjRelativePath in projectPaths)
             {
-                var csProjFileName = Path.GetFileName(csProjRelativePath);
+                var csProjFileName = Path.GetFileName(ExtractCsProjReferenceRelativePath(csProjRelativePath));
 
                 ProcessCsProjFileMove(rootPath, csProjFilesProcessed, csProjFilePaths, csProjFileName, csProjRelativePath);
 
