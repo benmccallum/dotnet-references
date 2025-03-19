@@ -69,6 +69,8 @@ public static class FixLocationsOfProjectsProcessor
 
     private static string ProcessCsProjFileMove(string rootPath, HashSet<string> csProjFilesProcessed, string[] csProjFilePaths, string csProjFileName, string csProjRelativePath)
     {
+        Console.WriteLine("Processing project: " + csProjFileName);
+
         // Find where it currently is
         var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
 
@@ -99,6 +101,19 @@ public static class FixLocationsOfProjectsProcessor
         }
     }
 
+    private static void ProcessProjectsInSlnFilterFile(string[] projectPaths, string rootPath, string[] csProjFilePaths, HashSet<string> csProjFilesProcessed)
+    {
+        foreach (var csProjRelativePath in projectPaths)
+        {
+            var csProjFileName = Path.GetFileName(ExtractCsProjReferenceRelativePath(csProjRelativePath));
+
+            ProcessCsProjFileMove(rootPath, csProjFilesProcessed, csProjFilePaths, csProjFileName, csProjRelativePath);
+
+            // Note: The assumption is that all files to be moved are in the slnf file,
+            // and that crawling the tree of this csproj file's references isn't needed
+        }
+    }
+
     private static string ExtractCsProjReferenceRelativePath(string input)
     {
         var firstQuoteIndex = input.IndexOf('"');
@@ -110,18 +125,5 @@ public static class FixLocationsOfProjectsProcessor
             // Replacing slashes so Linux doesn't freak out
             .Replace("\\", "/")
             .TrimEnd('\"');
-    }
-
-    private static void ProcessProjectsInSlnFilterFile(string[] projectPaths, string rootPath, string[] csProjFilePaths, HashSet<string> csProjFilesProcessed)
-    {
-        foreach (var csProjRelativePath in projectPaths)
-        {
-            var csProjFileName = Path.GetFileName(csProjRelativePath);
-
-            ProcessCsProjFileMove(rootPath, csProjFilesProcessed, csProjFilePaths, csProjFileName, csProjRelativePath);
-
-            // Note: The assumption is that all files to be moved are in the slnf file,
-            // and that crawling the tree of this csproj file's references isn't needed
-        }
     }
 }
