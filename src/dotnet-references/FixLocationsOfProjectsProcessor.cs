@@ -73,6 +73,8 @@ namespace BenMcCallum.DotNet.References
 
         private static string ProcessCsProjFileMove(string rootPath, HashSet<string> csProjFilesProcessed, string[] csProjFilePaths, string csProjFileName, string csProjRelativePath)
         {
+            Console.WriteLine("Processing project: " + csProjFileName);
+
             // Find where it currently is
             var csProjFilePath = FindCsProjFilePath(csProjFilePaths, csProjFileName);
 

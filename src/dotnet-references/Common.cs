@@ -38,7 +38,12 @@ namespace BenMcCallum.DotNet.References
         {
             try
             {
-                return csProjFilePaths.Single(fp => Path.GetFileName(fp) == csProjFileName);
+                return csProjFilePaths.Single(fp =>
+                {
+                    var candidateFilePath = Path.GetFileName(fp);
+                    Console.WriteLine("Candidate file name: " + candidateFilePath);
+                    return candidateFilePath == csProjFileName;
+                });
             }
             catch (Exception ex)
             {
