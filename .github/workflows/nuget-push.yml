@@ -3,7 +3,8 @@ name: NuGet Push
 on:
   push:
     branches: 
-      - master
+      - main
+      - v*/main
     paths:
       - '.github/**'
       - '!docs/**'
