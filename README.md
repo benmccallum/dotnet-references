@@ -43,7 +43,9 @@ This mode can fix references between solution files and projects in one of two w
 ### Directory as entry point 
 By passing a directory as the entry, the tool will assume that the current directory structure is the source of truth and will fix all project references inside all .sln and .csproj files to the correct relative path.
 
-> dotnet references fix -ep ./src
+```bash
+dotnet references fix -ep ./src
+```
 
 Use cases:
  You have moved your source code into a new folder structure (via a script or otherwise) and don't want to manually updates all your project references in .sln and .csproj files. (Project file names must be the same).
@@ -51,7 +53,9 @@ Use cases:
 ### Solution file as entry point
 By passing a .sln file, the tool will assume that it is the source of truth; thus moving the .csproj files into the correct directory structure per their relative path in the sln file.
 
-> dotnet references fix -ep Company.Project.sln
+```bash
+dotnet references fix -ep Company.Project.sln
+```
 
 Use cases:
 1. Overcoming Dockerfile COPY globbing limitations... See [here](docs/Dockerfile-use-case.md).
@@ -61,7 +65,11 @@ By passing a .slnf file, the tool will assume that it is the source of truth; th
 
 > Note: You will need to have the sln and slnf files in their correct directory structure for this to work.
 
-> dotnet references fix -ep Company.Project.sln
+> Supported in v1.3.0+ and v2.1.0+
+
+```bash
+dotnet references fix -ep Company.Project.slnf
+```
 
 Use cases:
 1. Overcoming Dockerfile COPY globbing limitations... See [here](docs/Dockerfile-use-case.md).
@@ -70,7 +78,9 @@ Use cases:
 This mode "internalises" references, by turning package references to project references.
 (The project name must be the same as the package name).
 
-> dotnet references internalise -wd ./src
+```bash
+dotnet references internalise -wd ./src
+```
 
 Use cases:
 1. You've consolidated separate projects (and packages) into a mono repo and want to swap all package references to local project references where possible.
