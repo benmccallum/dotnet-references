@@ -105,9 +105,10 @@ public static class FixLocationsOfProjectsProcessor
     {
         foreach (var csProjRelativePath in projectPaths)
         {
-            var csProjFileName = Path.GetFileName(ExtractCsProjReferenceRelativePath(csProjRelativePath));
+            var normalizedCsProjRelativePath = ExtractCsProjReferenceRelativePath(csProjRelativePath);
+            var csProjFileName = Path.GetFileName(normalizedCsProjRelativePath);
 
-            ProcessCsProjFileMove(rootPath, csProjFilesProcessed, csProjFilePaths, csProjFileName, csProjRelativePath);
+            ProcessCsProjFileMove(rootPath, csProjFilesProcessed, csProjFilePaths, csProjFileName, normalizedCsProjRelativePath);
 
             // Note: The assumption is that all files to be moved are in the slnf file,
             // and that crawling the tree of this csproj file's references isn't needed
